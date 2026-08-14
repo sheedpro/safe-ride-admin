@@ -17,4 +17,8 @@
 .route-options { position: absolute; top: 42px; left: 0; right: 0; z-index: 1000; display: grid; max-height: 220px; overflow: auto; padding: 5px; border: 1px solid #cfdad5; border-radius: 7px; background: #fff; box-shadow: 0 8px 20px rgba(33, 52, 44, .15); }
 .route-options button { display: grid; gap: 2px; width: 100%; padding: 9px 10px; border: 0; border-radius: 5px; text-align: left; background: transparent; color: #24363b; cursor: pointer; }
 .route-options button:hover { background: #edf4ef; }
+.table-pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 16px; border-top: 1px solid #e8eeea; color: #65747a; }
+.table-pagination > div { display: flex; align-items: center; gap: 8px; }
+.table-pagination span { font-size: 12px; white-space: nowrap; }
+@media (max-width: 650px) { .table-pagination { align-items: flex-start; flex-direction: column; } }
 @media (max-width: 650px) { .leaflet-map { height: 320px; } }

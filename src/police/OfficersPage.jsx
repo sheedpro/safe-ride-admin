@@ -18,8 +18,8 @@ const ugandaNumber = (value) => {
     ? `+${digits}`
     : `+256${digits.replace(/^0/, "")}`;
 };
-export function OfficersPage({ session, checkpoints, reload }) {
-  const [rows, setRows] = useState([]);
+export function OfficersPage({ session, checkpoints, rows: providedRows, reload }) {
+  const [loadedRows, setLoadedRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     checkpoint_id: "",
@@ -31,11 +31,10 @@ export function OfficersPage({ session, checkpoints, reload }) {
   const [error, setError] = useState("");
   const load = () =>
     policeApi("/officers", session)
-      .then(setRows)
+      .then(setLoadedRows)
       .catch((error) => setError(error.message));
-  useEffect(() => {
-    load();
-  }, [session]);
+  useEffect(() => { if (!providedRows) load(); }, [session, providedRows]);
+  const rows = providedRows || loadedRows;
   const set = (key, value) =>
     setForm((current) => ({ ...current, [key]: value }));
   async function create() {

@@ -7,8 +7,13 @@ import {
   TableHeaderCell,
   TableRow,
 } from "@fluentui/react-components";
+import { useEffect, useState } from "react";
 import { EmptyState, StatusBadge } from "./Shared";
+import { paginateRows, TablePagination } from "./TablePagination";
 export function ReportsTable({ rows = [], onModerate, onSelect }) {
+  const [page, setPage] = useState(1);
+  useEffect(() => setPage(1), [rows]);
+  const { items, page: currentPage, totalPages } = paginateRows(rows, page);
   return (
     <section className="surface">
       <div className="section-heading">
@@ -34,7 +39,7 @@ export function ReportsTable({ rows = [], onModerate, onSelect }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map((row) => (
+          {items.map((row) => (
             <TableRow key={row.case_id}>
               <TableCell className="mono">
                 <Button
@@ -78,6 +83,7 @@ export function ReportsTable({ rows = [], onModerate, onSelect }) {
           ))}
         </TableBody>
       </Table>
+      <TablePagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />
       {!rows.length && (
         <EmptyState text="No reports match the selected view." />
       )}
