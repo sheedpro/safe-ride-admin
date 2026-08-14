@@ -11,4 +11,10 @@
 .station-map-picker small { display: block; padding: 9px 11px; color: #65747a; font-size: 12px; background: #fff; }
 .saferide-station-picker-wrap { background: transparent; border: 0; }
 .saferide-station-picker { display: grid; place-items: center; width: 26px; height: 26px; border: 3px solid #fff; border-radius: 50%; background: #bf4d35; color: #fff; font: 800 20px/1 Arial, sans-serif; box-shadow: 0 2px 8px rgba(33, 56, 47, .42); }
+.route-multi-select { position: relative; display: grid; gap: 7px; }
+.route-selected { display: flex; flex-wrap: wrap; gap: 6px; min-height: 26px; align-items: center; }
+.route-selected small, .route-options small { color: #65747a; font-size: 12px; }
+.route-options { position: absolute; top: 42px; left: 0; right: 0; z-index: 1000; display: grid; max-height: 220px; overflow: auto; padding: 5px; border: 1px solid #cfdad5; border-radius: 7px; background: #fff; box-shadow: 0 8px 20px rgba(33, 52, 44, .15); }
+.route-options button { display: grid; gap: 2px; width: 100%; padding: 9px 10px; border: 0; border-radius: 5px; text-align: left; background: transparent; color: #24363b; cursor: pointer; }
+.route-options button:hover { background: #edf4ef; }
 @media (max-width: 650px) { .leaflet-map { height: 320px; } }
