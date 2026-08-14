@@ -3,4 +3,6 @@
 .leaflet-popup-content { min-width: 170px; display: grid; gap: 6px; color: #26373d; }
 .saferide-pin-wrap { background: transparent; border: 0; }
 .saferide-pin { display: block; width: 16px; height: 16px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 5px rgba(33, 56, 47, .45); }
+.saferide-station-wrap { background: transparent; border: 0; }
+.saferide-station { display: grid; place-items: center; width: 24px; height: 24px; border: 2px solid #fff; border-radius: 5px; background: #273d44; color: #fff; font: 800 12px/1 Manrope, Arial, sans-serif; box-shadow: 0 2px 7px rgba(33, 56, 47, .4); }
 @media (max-width: 650px) { .leaflet-map { height: 320px; } }

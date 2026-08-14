@@ -79,21 +79,29 @@ const reportIcon = (status) =>
     iconSize: [18, 18],
     iconAnchor: [9, 9],
   });
+const stationIcon = L.divIcon({ className: "saferide-station-wrap", html: '<span class="saferide-station">S</span>', iconSize: [28, 28], iconAnchor: [14, 14] });
 const point = (report) => {
   const lat = Number(report.predicted_lat ?? report.reporter_lat);
   const lng = Number(report.predicted_lng ?? report.reporter_lng);
   return Number.isFinite(lat) && Number.isFinite(lng) ? [lat, lng] : null;
 };
 const parseLine = (value) => {
-  const match =
-    typeof value === "string" && value.match(/^LINESTRING\s*\((.+)\)$/i);
-  return match
-    ? match[1]
+  const line = typeof value === "object" && value?.coordinates ? value.coordinates : null;
+  if (Array.isArray(line)) return line.map(([lng, lat]) => [Number(lat), Number(lng)]).filter(([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng));
+  const match = typeof value === "string" && value.replace(/^SRID=\d+;/i, "").match(/^LINESTRING\s*\((.+)\)$/i);
+  return match ? match[1]
         .split(",")
         .map((pair) => pair.trim().split(/\s+/).map(Number))
         .filter(([lng, lat]) => Number.isFinite(lat) && Number.isFinite(lng))
         .map(([lng, lat]) => [lat, lng])
     : [];
+};
+const parsePoint = (value) => {
+  if (typeof value === "object" && Array.isArray(value?.coordinates)) return [Number(value.coordinates[1]), Number(value.coordinates[0])];
+  const match = typeof value === "string" && value.replace(/^SRID=\d+;/i, "").match(/^POINT\s*\(([^)]+)\)$/i);
+  if (!match) return null;
+  const [lng, lat] = match[1].trim().split(/\s+/).map(Number);
+  return Number.isFinite(lat) && Number.isFinite(lng) ? [lat, lng] : null;
 };
 function Bounds({ points }) {
   const map = useMap();
@@ -107,6 +115,7 @@ export function OperationsMap({
   reports = [],
   routes = [],
   checkpoints = [],
+  stations = [],
   onSelect,
 }) {
   const reportPoints = reports
@@ -147,10 +156,14 @@ export function OperationsMap({
       checkpoint: item,
       coordinates: [Number(item.latitude), Number(item.longitude)],
     }));
+  const stationPoints = stations
+    .map((station) => ({ station, coordinates: parsePoint(station.location) }))
+    .filter((item) => item.coordinates);
   const bounds = [
     ...reportPoints.map((item) => item.coordinates),
     ...routesWithLines.flatMap((item) => item.coordinates),
     ...checkpointPoints.map((item) => item.coordinates),
+    ...stationPoints.map((item) => item.coordinates),
   ];
   return (
     <section className="map-panel">
@@ -158,7 +171,7 @@ export function OperationsMap({
         <span>
           <MapRegular /> Live operations map
         </span>
-        <small>Internal SafeRide map</small>
+        <small>SafeRide route, station &amp; case data</small>
       </div>
       <div className="leaflet-map">
         <MapContainer center={center} zoom={12} scrollWheelZoom>
@@ -178,6 +191,11 @@ export function OperationsMap({
                   ? "Active checkpoint"
                   : "Inactive checkpoint"}
               </Popup>
+            </Marker>
+          ))}
+          {stationPoints.map(({ station, coordinates }) => (
+            <Marker key={station.station_id} position={coordinates} icon={stationIcon}>
+              <Popup><strong>{station.name}</strong><br />Police station</Popup>
             </Marker>
           ))}
           {reportPoints.map(({ report, coordinates }) => (
