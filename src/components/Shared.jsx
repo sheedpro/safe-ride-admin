@@ -5,10 +5,12 @@ import {
   MapRegular,
 } from "@fluentui/react-icons";
 import L from "leaflet";
-import { MapContainer, Marker, Polyline, Popup, useMap } from "react-leaflet";
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
 import { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import "./locations.css";
+
+const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
 export function PageHead({ eyebrow, title, children }) {
   return (
@@ -175,6 +177,13 @@ export function OperationsMap({
       </div>
       <div className="leaflet-map">
         <MapContainer center={center} zoom={12} scrollWheelZoom>
+          {mapTilerKey && (
+            <TileLayer
+              url={`https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=${mapTilerKey}`}
+              attribution='&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noreferrer">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>'
+              crossOrigin
+            />
+          )}
           {routesWithLines.map(({ route, coordinates }) => (
             <Polyline
               key={route.route_id}

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import L from "leaflet";
-import { MapContainer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+
+const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 import {
   Button,
   Input,
@@ -50,6 +52,7 @@ function StationMapPicker({ latitude, longitude, onPick }) {
   return (
     <div className="station-map-picker">
       <MapContainer center={selected || [0.3476, 32.5825]} zoom={selected ? 14 : 11} scrollWheelZoom>
+        {mapTilerKey && <TileLayer url={`https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=${mapTilerKey}`} attribution='&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noreferrer">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>' crossOrigin />}
         <MapClick onPick={(point) => onPick(point.lat, point.lng)} />
         {selected && <Marker position={selected} icon={markerIcon} draggable eventHandlers={{ dragend: (event) => { const point = event.target.getLatLng(); onPick(point.lat, point.lng); } }} />}
       </MapContainer>
