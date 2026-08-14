@@ -1,0 +1,6 @@
+.leaflet-map { height: 420px; background: #e8eeea; }
+.leaflet-container { height: 100%; width: 100%; background-color: #e8eeea; background-image: linear-gradient(rgba(62, 101, 87, .10) 1px, transparent 1px), linear-gradient(90deg, rgba(62, 101, 87, .10) 1px, transparent 1px); background-size: 32px 32px; font-family: Manrope, Arial, sans-serif; }
+.leaflet-popup-content { min-width: 170px; display: grid; gap: 6px; color: #26373d; }
+.saferide-pin-wrap { background: transparent; border: 0; }
+.saferide-pin { display: block; width: 16px; height: 16px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 5px rgba(33, 56, 47, .45); }
+@media (max-width: 650px) { .leaflet-map { height: 320px; } }
