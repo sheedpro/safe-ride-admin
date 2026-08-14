@@ -122,7 +122,7 @@ export function OperationsMap({
     .map((report) => ({ report, coordinates: point(report) }))
     .filter((item) => item.coordinates);
   const routesWithLines = routes
-    .map((route) => ({ route, coordinates: parseLine(route.polyline) }))
+    .map((route) => ({ route, coordinates: parseLine(route.map_polyline || route.polyline) }))
     .filter((item) => item.coordinates.length > 1);
   if (!reportPoints.length && !routesWithLines.length)
     return (
