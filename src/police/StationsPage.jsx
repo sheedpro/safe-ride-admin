@@ -1,4 +1,7 @@
 import { useState } from "react";
+import L from "leaflet";
+import { MapContainer, Marker, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import {
   Button,
   Input,
@@ -27,6 +30,33 @@ const normaliseUgandaNumber = (value) => {
   const digits = String(value || "").replace(/\D/g, "");
   return digits ? `+256${digits.replace(/^256/, "").replace(/^0/, "")}` : "";
 };
+
+const markerIcon = L.divIcon({
+  className: "saferide-station-picker-wrap",
+  html: '<span class="saferide-station-picker">+</span>',
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+});
+
+function MapClick({ onPick }) {
+  useMapEvents({ click: (event) => onPick(event.latlng) });
+  return null;
+}
+
+function StationMapPicker({ latitude, longitude, onPick }) {
+  const selected = Number.isFinite(Number(latitude)) && Number.isFinite(Number(longitude))
+    ? [Number(latitude), Number(longitude)]
+    : null;
+  return (
+    <div className="station-map-picker">
+      <MapContainer center={selected || [0.3476, 32.5825]} zoom={selected ? 14 : 11} scrollWheelZoom>
+        <MapClick onPick={(point) => onPick(point.lat, point.lng)} />
+        {selected && <Marker position={selected} icon={markerIcon} draggable eventHandlers={{ dragend: (event) => { const point = event.target.getLatLng(); onPick(point.lat, point.lng); } }} />}
+      </MapContainer>
+      <small>Click to place the station. Drag the marker to refine its position. This map uses only SafeRide data.</small>
+    </div>
+  );
+}
 
 export function StationsPage({ session, stations, reload }) {
   const [form, setForm] = useState(blank);
@@ -101,6 +131,7 @@ export function StationsPage({ session, stations, reload }) {
             <Label>Desk phone<Input value={form.phone_number} onChange={(_, data) => set("phone_number", data.value)} /></Label>
             <Label>Latitude<Input input={{ inputMode: "decimal" }} value={form.latitude} onChange={(_, data) => set("latitude", data.value)} /></Label>
             <Label>Longitude<Input input={{ inputMode: "decimal" }} value={form.longitude} onChange={(_, data) => set("longitude", data.value)} /></Label>
+            <div className="wide"><StationMapPicker latitude={form.latitude} longitude={form.longitude} onPick={(latitude, longitude) => setForm((current) => ({ ...current, latitude: latitude.toFixed(6), longitude: longitude.toFixed(6) }))} /></div>
             <Label className="wide">Operational reason<Input value={form.reason} onChange={(_, data) => set("reason", data.value)} /></Label>
             <div className="wide"><Button appearance="primary" disabled={!form.station_id || !form.name || !form.reason || (!editing && (!form.latitude || !form.longitude))} onClick={submit}>{editing ? "Save station" : "Create station"}</Button>{error && <p className="form-error">{error}</p>}</div>
           </div>

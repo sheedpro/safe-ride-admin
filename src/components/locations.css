@@ -5,4 +5,9 @@
 .saferide-pin { display: block; width: 16px; height: 16px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 5px rgba(33, 56, 47, .45); }
 .saferide-station-wrap { background: transparent; border: 0; }
 .saferide-station { display: grid; place-items: center; width: 24px; height: 24px; border: 2px solid #fff; border-radius: 5px; background: #273d44; color: #fff; font: 800 12px/1 Manrope, Arial, sans-serif; box-shadow: 0 2px 7px rgba(33, 56, 47, .4); }
+.station-map-picker { overflow: hidden; border: 1px solid #d9e2de; border-radius: 8px; background: #e8eeea; }
+.station-map-picker .leaflet-container { height: 280px; }
+.station-map-picker small { display: block; padding: 9px 11px; color: #65747a; font-size: 12px; background: #fff; }
+.saferide-station-picker-wrap { background: transparent; border: 0; }
+.saferide-station-picker { display: grid; place-items: center; width: 26px; height: 26px; border: 3px solid #fff; border-radius: 50%; background: #bf4d35; color: #fff; font: 800 20px/1 Arial, sans-serif; box-shadow: 0 2px 8px rgba(33, 56, 47, .42); }
 @media (max-width: 650px) { .leaflet-map { height: 320px; } }
